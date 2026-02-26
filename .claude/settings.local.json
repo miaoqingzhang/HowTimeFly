@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd:*)",
+      "Bash(python:*)",
+      "Bash(curl:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(pip install:*)",
+      "Bash(winget install:*)",
+      "Bash(choco install:*)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)",
+      "Bash(del:*)"
+    ]
+  }
+}

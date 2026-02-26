@@ -1,0 +1,61 @@
+# Docker 构建忽略文件
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitee/
+
+# 文档
+README.md
+*.md
+docs/
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# 测试和脚本
+tests/
+scripts/
+*.test.py
+
+# 数据文件
+data/
+test_media/
+*.db
+*.db-journal
+
+# 临时文件
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# CI/CD
+.gitee-ci.yml
+.github/

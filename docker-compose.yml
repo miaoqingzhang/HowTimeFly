@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  howtimefly:
+    build: .
+    container_name: howtimefly
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      # 挂载配置文件
+      - ./config.yaml:/app/config.yaml
+      # 挂载数据库和缩略图目录
+      - ./data:/app/data
+      # 挂载媒体文件目录（请修改为你的实际路径）
+      - /path/to/your/photos:/media:ro
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - howtimefly_network
+
+networks:
+  howtimefly_network:
+    driver: bridge

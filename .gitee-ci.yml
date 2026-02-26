@@ -1,0 +1,50 @@
+# Gitee Go CI/CD 配置文件
+# 用于自动构建 Docker 镜像
+
+name: HowTimeFly Docker Build
+
+on:
+  push:
+    tags:
+      - v*
+
+# 构建 stages
+stages:
+  - name: build docker image
+    jobs:
+      - name: build_and_push
+        runs-on: docker-latest
+        steps:
+          # 检出代码
+          - uses: actions-checkout@v1
+
+          # 设置 Docker 镜像标签
+          - name: Set image tags
+            run: |
+              if [ "$GITEA_REF" = "refs/heads/main" ]; then
+                echo "DOCKER_TAG=latest" >> $GITEA_ENV
+              else
+                echo "DOCKER_TAG=${GITEA_REF#refs/heads/}" >> $GITEA_ENV
+              fi
+
+          # 构建 Docker 镜像
+          - name: Build Docker image
+            run: |
+              docker build -t $GITEA_REPOSITORY_OWNER/howtimefly:$DOCKER_TAG .
+              docker tag $GITEA_REPOSITORY_OWNER/howtimefly:$DOCKER_TAG $GITEA_REPOSITORY_OWNER/howtimefly:latest
+
+          # 推送到 Gitee Go 镜像仓库 (如果可用)
+          # 或者输出镜像信息供手动导出
+          - name: Save image
+            run: |
+              docker save $GITEA_REPOSITORY_OWNER/howtimefly:$DOCKER_TAG -o howtimefly-$DOCKER_TAG.tar
+              docker save $GITEA_REPOSITORY_OWNER/howtimefly:latest -o howtimefly-latest.tar
+
+          # 上传构建产物
+          - name: Upload artifacts
+            uses: actions-upload-artifact@v1
+            with:
+              name: docker-images
+              path: |
+                howtimefly-latest.tar
+                howtimefly-${{ env.DOCKER_TAG }}.tar

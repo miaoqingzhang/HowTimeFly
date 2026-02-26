@@ -1,0 +1,42 @@
+# 服务器配置
+server:
+  host: "127.0.0.1"
+  port: 8080
+  debug: true
+  reload: true
+
+# 扫描路径配置 - 请修改为您的本地测试目录
+scanner:
+  # 测试目录 - 将您的照片/视频放在这里
+  paths:
+    - "D:/BaiduNetdiskDownload"  # 扫描百度网盘下载目录
+  recursive: true
+  file_types:
+    photo:
+      - ".jpg"
+      - ".jpeg"
+      - ".png"
+      - ".gif"
+      - ".webp"
+    video:
+      - ".mp4"
+      - ".mov"
+      - ".avi"
+      - ".mkv"
+
+# 数据库配置
+database:
+  path: "./data/database.db"
+
+# 缩略图配置
+thumbnails:
+  enabled: true
+  output_dir: "./data/thumbnails"
+  sizes:
+    small: 200
+    medium: 600
+    large: 1200
+
+# 日志配置
+logging:
+  level: "DEBUG"

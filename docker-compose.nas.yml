@@ -1,0 +1,65 @@
+# 飞牛OS / NAS 专用 Docker Compose 配置
+# 支持通过环境变量配置扫描路径
+
+version: '3.8'
+
+services:
+  howtimefly:
+    image: howtimefly:latest
+    # 或者使用你构建的镜像: gitee用户名/howtimefly:latest
+    container_name: howtimefly
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      # 时区设置
+      - TZ=Asia/Shanghai
+
+      # ========== 媒体路径配置 ==========
+      # 方式1: 单个媒体目录
+      - SCAN_PATHS=/media
+
+      # 方式2: 多个媒体目录 (用冒号分隔)
+      # - SCAN_PATHS=/media/photos:/media/videos:/mnt/nas/pictures
+
+      # 方式3: NAS 常见路径示例
+      # - SCAN_PATHS=/volume1/photo:/volume1/video:/volume2/backup
+
+      # 是否递归扫描 (true/false)
+      - SCAN_RECURSIVE=true
+
+    volumes:
+      # 配置文件 (可选，包含默认配置)
+      - ./config.yaml:/app/config.yaml:ro
+
+      # 数据持久化 - 数据库和缩略图
+      - ./data:/app/data
+
+      # ========== 媒体文件挂载 ==========
+      # 重要：这里的挂载路径必须与 SCAN_PATHS 环境变量对应
+      # 单个目录示例
+      - /your/media/path:/media:ro
+
+      # 多个目录示例 (取消注释并根据需要修改)
+      # - /path/to/photos:/media/photos:ro
+      # - /path/to/videos:/media/videos:ro
+      # - /mnt/nas/pictures:/media/pictures:ro
+
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    networks:
+      - howtimefly_network
+
+networks:
+  howtimefly_network:
+    driver: bridge
