@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="服务器设置">
+
+        <EditTextPreference
+            android:key="server_url"
+            android:title="服务器地址"
+            android:summary="http://your-server:8080"
+            android:dialogTitle="输入服务器地址"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            android:key="test_connection"
+            android:title="测试连接"
+            android:summary="检查服务器是否可访问" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="播放设置">
+
+        <SwitchPreferenceCompat
+            android:key="auto_play"
+            android:title="自动播放"
+            android:summaryOn="照片将自动切换"
+            android:summaryOff="手动控制照片切换"
+            android:defaultValue="false" />
+
+        <SeekBarPreference
+            android:key="photo_duration"
+            android:title="照片显示时长"
+            android:summary="自动播放时每张照片显示的时间"
+            android:min="1"
+            android:max="10"
+            android:defaultValue="3"
+            showSeekBarValue="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
