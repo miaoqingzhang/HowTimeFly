@@ -750,6 +750,11 @@
         <div id="content"></div>
     </div>
 
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="/static/music/background.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- 模态框 -->
     <div class="modal" id="modal">
         <button class="modal-close" onclick="closeModal()">×</button>
@@ -792,6 +797,8 @@
         let playbackSpeeds = [3000, 5000, 10000]; // 照片显示时长 (毫秒)
         let currentSpeedIndex = 0;
         let videoElement = null;
+        let bgMusicElement = null;
+        const bgMusicVolume = 0.3; // 背景音乐音量 (0-1)
         // 排序相关变量
         let currentSortOrder = 'desc'; // desc = 倒序(晚→早), asc = 正序(早→晚)
 
@@ -1305,12 +1312,26 @@
             const modal = document.getElementById('modal');
             const content = document.getElementById('modalContent');
 
+            // 初始化背景音乐元素
+            if (!bgMusicElement) {
+                bgMusicElement = document.getElementById('bgMusic');
+                if (bgMusicElement) {
+                    bgMusicElement.volume = bgMusicVolume;
+                }
+            }
+
             // 更新进度显示
             updatePlaybackProgress();
 
             if (item.file_type === 'video') {
                 content.innerHTML = `<video src="${item.file_url}" controls id="currentVideo"></video>`;
                 videoElement = content.querySelector('video');
+
+                // 视频时停止背景音乐
+                if (bgMusicElement) {
+                    bgMusicElement.pause();
+                    bgMusicElement.currentTime = 0;
+                }
 
                 // 视频播放结束后自动跳到下一个
                 videoElement.addEventListener('ended', () => {
@@ -1326,6 +1347,11 @@
             } else {
                 content.innerHTML = `<img src="${item.file_url}" alt="${item.file_name}">`;
                 videoElement = null;
+
+                // 照片时播放背景音乐
+                if (bgMusicElement && isPlaying) {
+                    bgMusicElement.play().catch(e => console.log('背景音乐播放失败:', e));
+                }
 
                 // 如果正在播放，设置定时器自动跳到下一张
                 if (isPlaying) {
@@ -1359,6 +1385,11 @@
         // 关闭模态框
         function closeModal() {
             stopPlayback();
+            // 停止背景音乐
+            if (bgMusicElement) {
+                bgMusicElement.pause();
+                bgMusicElement.currentTime = 0;
+            }
             document.getElementById('modal').classList.remove('active');
             document.getElementById('modal').classList.remove('fullscreen');
             document.getElementById('modalContent').innerHTML = '';
@@ -1402,18 +1433,24 @@
                         if (dateBar) dateBar.style.display = 'flex';
                     });
                 } else {
-                    // 照片，设置定时器
+                    // 照片，设置定时器并播放背景音乐
                     scheduleNext();
+                    if (bgMusicElement) {
+                        bgMusicElement.play().catch(e => console.log('背景音乐播放失败:', e));
+                    }
                 }
             } else {
                 playIcon.textContent = '▶';
                 // 暂停时显示日期栏
                 if (dateBar) dateBar.style.display = 'flex';
 
-                // 停止定时器，但不暂停视频
+                // 停止定时器和背景音乐，但不暂停视频
                 if (playTimer) {
                     clearTimeout(playTimer);
                     playTimer = null;
+                }
+                if (bgMusicElement) {
+                    bgMusicElement.pause();
                 }
                 if (videoElement) {
                     videoElement.pause();

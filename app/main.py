@@ -53,6 +53,17 @@ app = FastAPI(
     version="0.1.0"
 )
 
+# ==================== 静态文件服务 ====================
+
+# 创建静态文件目录
+static_dir = Path(__file__).parent.parent / "static"
+static_dir.mkdir(exist_ok=True)
+music_dir = static_dir / "music"
+music_dir.mkdir(exist_ok=True)
+
+# 挂载静态文件
+app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
 # ==================== 依赖项 ====================
 
 def get_db():
