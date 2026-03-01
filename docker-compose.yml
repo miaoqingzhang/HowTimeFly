@@ -8,14 +8,24 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      # 挂载配置文件
-      - ./config.yaml:/app/config.yaml
       # 挂载数据库和缩略图目录
       - ./data:/app/data
-      # 挂载媒体文件目录（请修改为你的实际路径）
-      - /path/to/your/photos:/media:ro
+      # 挂载媒体文件目录（根据实际需求修改）
+      # 格式: 宿主机路径:容器内路径:ro（只读）
+      - /path/to/your/photos:/media/photos:ro
+      - /path/to/your/videos:/media/videos:ro
+      - /path/to/your/downloads:/media/downloads:ro
     environment:
+      # 时区设置
       - TZ=Asia/Shanghai
+
+      # ============ 动态配置扫描路径 ============
+      # SCAN_PATHS - 扫描路径（多个路径用冒号:分隔）
+      # 注意: 路径必须是在 volumes 中挂载的容器内路径
+      - SCAN_PATHS=/media/photos:/media/videos:/media/downloads
+
+      # SCAN_RECURSIVE - 是否递归扫描子目录（true/false）
+      - SCAN_RECURSIVE=true
     networks:
       - howtimefly_network
 

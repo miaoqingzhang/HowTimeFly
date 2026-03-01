@@ -20,6 +20,9 @@ COPY app/ ./app/
 COPY frontend/ ./frontend/
 COPY run.py .
 
+# 设置辅助脚本执行权限
+RUN chmod +x /app/update_config.py /app/show_config.py
+
 # 复制并设置启动脚本权限
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh

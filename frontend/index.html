@@ -5,96 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HowTimeFly - 时间线媒体播放</title>
     <style>
+        /* CSS2.1 兼容样式 - 适配旧版电视浏览器 */
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: Arial, sans-serif;
             background: #f5f7fa;
             color: #2c3e50;
+            font-size: 14px;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-bottom: 2px solid #5568d3;
+            zoom: 1;
         }
 
         .header h1 {
             font-size: 20px;
-            font-weight: 600;
+            font-weight: bold;
             color: #ffffff;
+            float: left;
+            margin: 0;
         }
 
         .header-controls {
-            display: flex;
-            gap: 10px;
+            float: right;
+        }
+
+        .header-controls button {
+            float: left;
+            margin-left: 5px;
+        }
+
+        .header-controls:after {
+            content: "";
+            display: block;
+            clear: both;
+            height: 0;
+            visibility: hidden;
         }
 
         .btn {
             padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            color: #ffffff;
+            background: #cccccc;
+            border: 1px solid #dddddd;
+            color: #333333;
             cursor: pointer;
             font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
+            margin-left: 5px;
+            display: inline-block;
         }
 
         .btn.primary {
             background: #4facfe;
             border-color: #4facfe;
-        }
-
-        .btn.primary:hover {
-            background: #00f2fe;
+            color: #ffffff;
         }
 
         .btn.danger {
             background: #ff6b6b;
             border-color: #ff6b6b;
-        }
-
-        .btn.danger:hover {
-            background: #ff5252;
+            color: #ffffff;
         }
 
         .stats-bar {
             background: #ffffff;
             padding: 12px 20px;
-            display: flex;
-            gap: 20px;
             font-size: 13px;
             border-bottom: 1px solid #e1e8ed;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            zoom: 1;
         }
 
         .stats-bar span {
             color: #7f8c8d;
+            margin-right: 20px;
+            display: inline;
         }
 
         .stats-bar strong {
             color: #2c3e50;
-            font-weight: 600;
+            font-weight: bold;
         }
 
-        /* 标签页 */
+        /* 标签页 - 使用 float 布局替代 flex */
         .tabs {
             background: #ffffff;
-            display: flex;
             border-bottom: 2px solid #e1e8ed;
+            overflow: hidden;
+            zoom: 1;
         }
 
         .tab {
@@ -106,8 +111,9 @@
             font-size: 14px;
             font-weight: 500;
             border-bottom: 2px solid transparent;
-            transition: all 0.2s;
             margin-bottom: -2px;
+            float: left;
+            display: block;
         }
 
         .tab:hover {
@@ -123,17 +129,26 @@
             margin-left: 6px;
             padding: 2px 8px;
             background: #e1e8ed;
-            border-radius: 12px;
             font-size: 12px;
             color: #2c3e50;
+            display: inline;
         }
 
         .tab.active .tab-count {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: #ffffff;
         }
 
+        .tabs:after {
+            content: "";
+            display: block;
+            clear: both;
+            height: 0;
+            visibility: hidden;
+        }
+
         .container {
+            width: 100%;
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
@@ -148,9 +163,26 @@
             font-weight: 600;
             margin-bottom: 15px;
             color: #2c3e50;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        .timeline-header span {
+            float: left;
+            display: block;
+        }
+
+        .timeline-header button {
+            float: right;
+            display: block;
+        }
+
+        .timeline-header:after {
+            content: "";
+            display: block;
+            clear: both;
+            height: 0;
+            visibility: hidden;
         }
 
         .timeline-header .batch-actions {
@@ -158,75 +190,75 @@
         }
 
         .timeline-header.show-batch .batch-actions {
-            display: flex;
-            gap: 10px;
+            display: block;
         }
 
+        .timeline-header.show-batch .batch-actions button {
+            float: left;
+            margin-left: 10px;
+        }
+
+        /* 网格布局 - 使用 float 替代 grid */
         .timeline-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            overflow: hidden;
+            zoom: 1;
         }
 
-        @media (max-width: 768px) {
-            .timeline-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1400px) {
-            .timeline-grid {
-                grid-template-columns: repeat(6, 1fr);
-            }
+        .timeline-grid:after {
+            content: "";
+            display: block;
+            clear: both;
+            height: 0;
+            visibility: hidden;
         }
 
         .media-item {
             position: relative;
             background: #ffffff;
-            border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s ease;
             border: 2px solid transparent;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            float: left;
+            width: 180px;
+            margin: 10px;
+            display: block;
         }
 
         .media-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+            border-color: #667eea;
         }
 
         .media-item:focus {
             outline: 3px solid #667eea;
-            outline-offset: 2px;
         }
 
         .media-item.selected {
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
 
         .thumbnail-container {
             position: relative;
-            aspect-ratio: 1;
+            width: 100%;
+            height: 180px;
             background: #ecf0f1;
+            overflow: hidden;
+            text-align: center;
         }
 
         .thumbnail-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            display: block;
         }
 
         .thumbnail-container .placeholder {
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            background: #fdcb6e;
             color: #2d3436;
             font-size: 40px;
+            line-height: 180px;
+            text-align: center;
         }
 
         .checkbox {
@@ -235,12 +267,10 @@
             left: 10px;
             width: 22px;
             height: 22px;
-            background: rgba(255, 255, 255, 0.9);
+            background: #ffffff;
             border: 2px solid #667eea;
-            border-radius: 6px;
             cursor: pointer;
             display: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
 
         .show-checkboxes .checkbox {
@@ -248,20 +278,19 @@
         }
 
         .checkbox.checked {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             border-color: #667eea;
         }
 
-        .checkbox.checked::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(45deg);
-            width: 5px;
-            height: 10px;
+        .checkbox.checked span {
+            display: block;
+            width: 8px;
+            height: 4px;
             border: solid white;
             border-width: 0 2px 2px 0;
+            position: absolute;
+            top: 6px;
+            left: 6px;
         }
 
         .video-badge {
@@ -270,13 +299,11 @@
             right: 8px;
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            background: #667eea;
+            color: #ffffff;
+            font-size: 10px;
+            line-height: 32px;
+            text-align: center;
         }
 
         .media-info {
@@ -310,27 +337,23 @@
             right: 8px;
             width: 28px;
             height: 28px;
-            background: rgba(255, 255, 255, 0.95);
+            background: #ffffff;
             border: none;
-            border-radius: 6px;
             cursor: pointer;
             display: none;
-            align-items: center;
-            justify-content: center;
             font-size: 14px;
             color: #667eea;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            transition: all 0.2s;
+            line-height: 28px;
+            text-align: center;
         }
 
         .media-item:hover .edit-btn {
-            display: flex;
+            display: block;
         }
 
         .edit-btn:hover {
             background: #667eea;
             color: #ffffff;
-            transform: scale(1.1);
         }
 
         .date-input-container {
@@ -347,40 +370,49 @@
             width: 100%;
             padding: 6px 8px;
             border: 1px solid #667eea;
-            border-radius: 4px;
             font-size: 12px;
             background: #f8f9fa;
         }
 
         .date-input-buttons {
-            display: flex;
-            gap: 6px;
+            overflow: hidden;
+            zoom: 1;
             margin-top: 6px;
         }
 
+        .date-input-buttons:after {
+            content: "";
+            display: block;
+            clear: both;
+            height: 0;
+            visibility: hidden;
+        }
+
         .date-input-buttons .btn {
-            flex: 1;
+            float: left;
+            width: 48%;
+            margin-left: 2%;
             padding: 4px 8px;
             font-size: 12px;
         }
 
+        .date-input-buttons .btn:first-child {
+            margin-left: 0;
+        }
+
         .quick-edit-date {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
             cursor: pointer;
             padding: 2px 6px;
-            border-radius: 4px;
-            transition: background 0.2s;
+            display: inline;
         }
 
         .quick-edit-date:hover {
-            background: rgba(102, 126, 234, 0.1);
+            background: #e8eaf0;
         }
 
         .quick-edit-date .edit-icon {
             font-size: 12px;
-            opacity: 0.6;
+            color: #999999;
         }
 
         /* 模态框 */
@@ -391,28 +423,30 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
+            background: #000000;
             z-index: 1000;
-            align-items: center;
-            justify-content: center;
         }
 
         .modal.active {
-            display: flex;
+            display: block;
         }
 
         .modal-content {
-            max-width: 90vw;
-            max-height: 90vh;
-            position: relative;
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            right: 20px;
+            bottom: 80px;
+            text-align: center;
         }
 
         .modal-content img,
         .modal-content video {
             max-width: 100%;
-            max-height: 90vh;
-            object-fit: contain;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            display: inline-block;
         }
 
         .modal-close {
@@ -421,40 +455,36 @@
             right: 20px;
             width: 40px;
             height: 40px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #333333;
             border: none;
-            border-radius: 50%;
             color: #fff;
             font-size: 24px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            line-height: 40px;
+            text-align: center;
         }
 
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #555555;
         }
 
         .modal-nav {
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
             width: 50px;
             height: 50px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #333333;
             border: none;
-            border-radius: 50%;
             color: #fff;
             font-size: 24px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            line-height: 50px;
+            text-align: center;
+            margin-top: -25px;
         }
 
         .modal-nav:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #555555;
         }
 
         .modal-nav.prev {
@@ -469,15 +499,24 @@
             position: absolute;
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.7);
+            margin-left: -150px;
+            width: 300px;
+            background: #000000;
             padding: 10px 20px;
-            border-radius: 20px;
             color: #fff;
             font-size: 14px;
+            text-align: center;
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        .modal-date-bar span {
+            display: block;
+            float: left;
+        }
+
+        .modal-date-bar button {
+            float: right;
         }
 
         /* 播放控制栏 */
@@ -486,60 +525,65 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+            background: #000000;
             padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            backdrop-filter: blur(10px);
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        .playback-controls:after {
+            content: "";
+            display: block;
+            clear: both;
+            height: 0;
+            visibility: hidden;
         }
 
         .play-btn {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             border: none;
             color: #fff;
             font-size: 20px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            float: left;
+            line-height: 50px;
+            text-align: center;
         }
 
         .play-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            background: #5568d3;
         }
 
         .playback-info {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            float: left;
+            margin-left: 15px;
             color: #fff;
+            line-height: 50px;
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        .playback-info span {
+            display: block;
+            float: left;
+            margin-left: 15px;
         }
 
         /* 排序控制按钮 */
         .sort-control {
             padding: 6px 14px;
-            background: rgba(102, 126, 234, 0.1);
+            background: #e8eaf0;
             border: 1px solid #667eea;
-            border-radius: 15px;
             font-size: 13px;
             color: #667eea;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            display: inline;
         }
 
         .sort-control:hover {
-            background: rgba(102, 126, 234, 0.2);
+            background: #d0d4e0;
         }
 
         .playback-progress {
@@ -549,34 +593,33 @@
 
         .playback-speed {
             padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
+            background: #333333;
             font-size: 13px;
             cursor: pointer;
-            transition: background 0.2s;
+            color: #ffffff;
+            display: inline;
         }
 
         .playback-speed:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #555555;
         }
 
         .playback-option {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: #333333;
             border: none;
             color: #fff;
             font-size: 16px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
+            float: right;
+            line-height: 40px;
+            text-align: center;
+            margin-left: 10px;
         }
 
         .playback-option:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #555555;
         }
 
         /* 播放进度条 */
@@ -586,16 +629,14 @@
             left: 20px;
             right: 20px;
             height: 3px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
+            background: #333333;
             overflow: hidden;
         }
 
         .playback-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: #667eea;
             width: 0%;
-            transition: width 0.3s ease;
         }
 
         /* 全屏模式 */
@@ -609,27 +650,43 @@
         }
 
         .modal.fullscreen .modal-content {
-            max-width: 100vw;
-            max-height: 100vh;
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+            margin: 0;
         }
 
         .modal.fullscreen .modal-content img,
         .modal.fullscreen .modal-content video {
-            max-height: calc(100vh - 120px);
+            width: 100%;
+            height: 100%;
+            max-height: none;
         }
 
         /* 批量编辑栏 */
         .batch-bar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             padding: 12px 20px;
             display: none;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            zoom: 1;
         }
 
         .batch-bar.visible {
-            display: flex;
+            display: block;
+        }
+
+        .batch-bar .batch-info {
+            float: left;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 30px;
+        }
+
+        .batch-bar .header-controls {
+            float: right;
         }
 
         .batch-info {
@@ -644,17 +701,6 @@
             padding: 50px;
             color: #7f8c8d;
             font-size: 16px;
-        }
-
-        .loading::after {
-            content: "...";
-            animation: ellipsis 1.5s infinite;
-        }
-
-        @keyframes ellipsis {
-            0% { content: "."; }
-            33% { content: ".."; }
-            66% { content: "..."; }
         }
 
         .empty-state {
@@ -679,44 +725,36 @@
             position: fixed;
             bottom: 30px;
             left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin-left: -150px;
+            width: 300px;
+            background: #667eea;
             color: #ffffff;
             padding: 12px 24px;
-            border-radius: 25px;
             font-size: 14px;
             font-weight: 500;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
             z-index: 2000;
-            animation: slideUp 0.3s ease-out;
-            opacity: 1;
-            transition: opacity 0.3s, transform 0.3s;
+            text-align: center;
         }
 
         .toast.hide {
-            opacity: 0;
-            transform: translateX(-50%) translateY(20px);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+            display: none;
         }
     </style>
 </head>
 <body>
+    <script>
+        // 刷新页面
+        function refreshPage() {
+            location.reload(true);
+        }
+    </script>
+
     <div class="header">
-        <h1>🎬 HowTimeFly</h1>
+        <h1>HowTimeFly <small style="font-size: 14px; color: #ff6b6b;">v6.4-FixPlay</small></h1>
         <div class="header-controls">
-            <button class="btn" onclick="startPlayback()">▶️ 播放</button>
-            <button class="btn" onclick="refreshStats()">📊 刷新</button>
-            <button class="btn primary" onclick="startScan()">🔍 扫描</button>
+            <button class="btn" onclick="startPlayback()">播放</button>
+            <button class="btn" onclick="refreshStats()">刷新数据</button>
+            <button class="btn primary" onclick="startScan()">扫描</button>
         </div>
     </div>
 
@@ -784,120 +822,229 @@
     </div>
 
     <script>
-        const API_BASE = '/api/v1';
-        let currentTab = 'timeline';
-        let currentItems = [];
-        let currentIndex = -1;
-        let selectedItems = new Set();
-        let showCheckboxes = false;
+        var API_BASE = '/api/v1';
+        var currentTab = 'timeline';
+        var currentItems = [];
+        var currentIndex = -1;
+        var selectedItems = [];  // 使用数组代替 Set
+        var showCheckboxes = false;
 
         // 播放相关变量
-        let isPlaying = false;
-        let playTimer = null;
-        let playbackSpeeds = [3000, 5000, 10000]; // 照片显示时长 (毫秒)
-        let currentSpeedIndex = 0;
-        let videoElement = null;
-        let bgMusicElement = null;
-        const bgMusicVolume = 0.3; // 背景音乐音量 (0-1)
+        var isPlaying = false;
+        var playTimer = null;
+        var playbackSpeeds = [3000, 5000, 10000];  // 照片显示时长 (毫秒)
+        var currentSpeedIndex = 1;  // 默认5秒
+        var videoElement = null;
+        var bgMusicElement = null;
+        var bgMusicVolume = 0.3;  // 背景音乐音量 (0-1)
         // 排序相关变量
-        let currentSortOrder = 'desc'; // desc = 倒序(晚→早), asc = 正序(早→晚)
+        var currentSortOrder = 'desc';  // desc = 倒序(晚→早), asc = 正序(早→晚)
+
+        // 分页相关变量
+        var currentPage = 0;
+        var pageSize = 30;
+        var totalItems = 0;
+        var hasMore = false;
+        var isLoading = false;
+
+        // ============ 通用 XHR 请求函数 ============
+        function xhrRequest(url, method, data, callback, errorCallback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            callback(response);
+                        } catch(e) {
+                            callback(xhr.responseText);
+                        }
+                    } else if (errorCallback) {
+                        errorCallback(xhr.status);
+                    }
+                }
+            };
+            if (data) {
+                xhr.send(JSON.stringify(data));
+            } else {
+                xhr.send();
+            }
+        }
 
         // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            refreshStats();
-            loadContent();
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化速度显示
+            initSpeedDisplay();
+            // 加载数据
+            refreshStats(function() {
+                loadContent();
+            }, function(error) {
+                var content = document.getElementById('content');
+                if (content) {
+                    content.innerHTML = '<div class="empty-state"><h2>加载失败</h2><p>错误: ' + error + '</p></div>';
+                }
+            });
         });
 
         // 切换标签
         function switchTab(tab) {
             currentTab = tab;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
+            var tabs = document.querySelectorAll('.tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            var tabElement = document.getElementById('tab-' + tab);
+            if (tabElement) {
+                tabElement.classList.add('active');
+            }
             clearSelection();
             loadContent();
         }
 
         // 加载内容
-        async function loadContent() {
+        function loadContent(callback, errorCallback) {
             if (currentTab === 'timeline') {
-                await loadTimeline();
+                loadTimeline(callback, errorCallback);
             } else {
-                await loadPending();
+                loadPending(callback, errorCallback);
             }
         }
 
         // 刷新统计
-        async function refreshStats() {
-            try {
-                const res = await fetch(`${API_BASE}/stats`);
-                const stats = await res.json();
+        function refreshStats(callback, errorCallback) {
+            console.log('[HowTimeFly] 开始加载统计信息...');
 
-                document.getElementById('statsBar').innerHTML = `
-                    <span>照片: <strong>${stats.total_photos.toLocaleString()}</strong></span>
-                    <span>视频: <strong>${stats.total_videos.toLocaleString()}</strong></span>
-                    <span>总大小: <strong>${stats.total_size_mb.toFixed(1)} MB</strong></span>
-                `;
+            xhrRequest(API_BASE + '/stats', 'GET', null, function(stats) {
+                console.log('[HowTimeFly] 统计数据:', stats);
 
-                // 同时获取待处理数量并更新标签计数
-                const pendingRes = await fetch(`${API_BASE}/media/pending?limit=1`);
-                const pendingData = await pendingRes.json();
-                const pendingCount = pendingData.total || 0;
+                var statsBar = document.getElementById('statsBar');
+                if (statsBar) {
+                    statsBar.innerHTML =
+                        '<span>照片: <strong>' + stats.total_photos + '</strong></span>' +
+                        '<span>视频: <strong>' + stats.total_videos + '</strong></span>' +
+                        '<span>总大小: <strong>' + stats.total_size_mb.toFixed(1) + ' MB</strong></span>';
+                }
 
-                // 时间线数量 = 总数 - 待处理数量
-                document.getElementById('count-timeline').textContent = stats.total_photos + stats.total_videos - pendingCount;
-                document.getElementById('count-pending').textContent = pendingCount;
-            } catch (e) {
-                document.getElementById('statsBar').innerHTML = `<span>加载失败: ${e.message}</span>`;
-            }
+                // 获取待处理数量
+                xhrRequest(API_BASE + '/media/pending?limit=1', 'GET', null, function(pendingData) {
+                    var pendingCount = pendingData.total || 0;
+
+                    var countTimeline = document.getElementById('count-timeline');
+                    var countPending = document.getElementById('count-pending');
+                    if (countTimeline) {
+                        countTimeline.textContent = stats.total_photos + stats.total_videos - pendingCount;
+                    }
+                    if (countPending) {
+                        countPending.textContent = pendingCount;
+                    }
+                    console.log('[HowTimeFly] 统计信息更新完成');
+                    if (callback) callback();
+                }, function(status) {
+                    var errorMsg = '获取待处理数量失败: ' + status;
+                    console.error('[HowTimeFly]', errorMsg);
+                    if (errorCallback) errorCallback(errorMsg);
+                });
+            }, function(status) {
+                var errorMsg = '统计加载失败: ' + status;
+                console.error('[HowTimeFly]', errorMsg);
+                var statsBar = document.getElementById('statsBar');
+                if (statsBar) {
+                    statsBar.innerHTML = '<span>' + errorMsg + '</span>';
+                }
+                if (errorCallback) errorCallback(errorMsg);
+            });
         }
 
         // 开始扫描
-        async function startScan() {
-            try {
-                const res = await fetch(`${API_BASE}/scan/start`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({})
-                });
-                const data = await res.json();
+        function startScan() {
+            xhrRequest(API_BASE + '/scan/start', 'POST', {}, function(data) {
                 alert(data.status);
-                refreshStats();
-                loadContent();
-            } catch (e) {
-                alert('启动失败: ' + e.message);
-            }
+                refreshStats(function() {
+                    loadContent();
+                });
+            }, function(status) {
+                alert('启动失败: ' + status);
+            });
         }
 
         // 加载时间线
-        async function loadTimeline() {
-            const content = document.getElementById('content');
+        function loadTimeline(callback, errorCallback) {
+            var content = document.getElementById('content');
             content.innerHTML = '<div class="loading">加载中</div>';
             hideBatchBar();
 
-            try {
-                const res = await fetch(`${API_BASE}/media/timeline?limit=100&sort=${currentSortOrder}`);
-                const data = await res.json();
-                currentItems = data.items;
-                selectedItems.clear();
+            // 重置分页状态
+            currentPage = 0;
+            currentItems = [];
+            selectedItems = [];
 
-                // 更新时间线角标
-                document.getElementById('count-timeline').textContent = data.total;
-
+            loadTimelinePage(function() {
                 if (currentItems.length === 0) {
-                    content.innerHTML = `
-                        <div class="empty-state">
-                            <h2>📷 暂无媒体文件</h2>
-                            <p>请将照片或视频放入配置的扫描目录，然后点击"扫描"</p>
-                        </div>
-                    `;
+                    content.innerHTML =
+                        '<div class="empty-state">' +
+                        '<h2>暂无媒体文件</h2>' +
+                        '<p>请将照片或视频放入配置的扫描目录，然后点击"扫描"</p>' +
+                        '</div>';
+                    if (callback) callback();
                     return;
                 }
 
-                const grouped = groupByDate(currentItems);
+                var grouped = groupByDate(currentItems);
                 renderGrid(grouped);
+                if (callback) callback();
+            }, errorCallback);
+        }
 
-            } catch (e) {
-                content.innerHTML = `<div class="empty-state"><h2>加载失败</h2><p>${e.message}</p></div>`;
+        // 加载时间线分页数据
+        function loadTimelinePage(callback, errorCallback) {
+            if (isLoading) {
+                if (callback) callback();
+                return;
+            }
+
+            isLoading = true;
+            var offset = currentPage * pageSize;
+
+            xhrRequest(API_BASE + '/media/timeline?limit=' + pageSize + '&offset=' + offset + '&sort=' + currentSortOrder, 'GET', null, function(data) {
+                console.log('[HowTimeFly] 第' + (currentPage + 1) + '页数据项数:', data.items.length, '总数:', data.total);
+
+                // 将新数据追加到数组
+                for (var i = 0; i < data.items.length; i++) {
+                    currentItems.push(data.items[i]);
+                }
+
+                totalItems = data.total;
+                hasMore = data.has_more;
+
+                // 更新时间线角标
+                var countTimeline = document.getElementById('count-timeline');
+                if (countTimeline) {
+                    countTimeline.textContent = totalItems;
+                }
+
+                currentPage++;
+                isLoading = false;
+
+                console.log('[HowTimeFly] 已加载', currentItems.length, '/', totalItems, 'has_more:', hasMore);
+
+                if (callback) callback();
+            }, function(status) {
+                isLoading = false;
+                var errorMsg = '时间线加载失败: ' + status;
+                console.error('[HowTimeFly]', errorMsg);
+                if (errorCallback) errorCallback(errorMsg);
+            });
+        }
+
+        // 检查并加载更多数据（播放时自动调用）
+        function checkAndLoadMore() {
+            // 如果剩余少于5条，自动加载下一页
+            var remaining = currentItems.length - currentIndex;
+            if (hasMore && !isLoading && remaining < 5) {
+                console.log('[HowTimeFly] 自动加载下一页...');
+                loadTimelinePage();
             }
         }
 
@@ -905,78 +1052,93 @@
         function toggleSort() {
             currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
             loadTimeline();
-            showToast(`✓ 切换为${currentSortOrder === 'asc' ? '正序 (早→晚)' : '倒序 (晚→早)'}`);
+            var msg = currentSortOrder === 'asc' ? '正序 (早→晚)' : '倒序 (晚→早)';
+            showToast('切换为' + msg);
         }
 
         // 加载待处理日期的文件
-        async function loadPending() {
-            const content = document.getElementById('content');
+        function loadPending(callback, errorCallback) {
+            var content = document.getElementById('content');
             content.innerHTML = '<div class="loading">加载中</div>';
             showBatchBar();
 
-            try {
-                const res = await fetch(`${API_BASE}/media/pending?limit=100`);
-                const data = await res.json();
+            xhrRequest(API_BASE + '/media/pending?limit=50', 'GET', null, function(data) {
                 currentItems = data.items;
-                selectedItems.clear();
+                selectedItems = [];
 
                 if (currentItems.length === 0) {
-                    content.innerHTML = `
-                        <div class="empty-state">
-                            <h2>✓ 没有待处理文件</h2>
-                            <p>所有媒体文件都已设置拍摄日期</p>
-                        </div>
-                    `;
+                    content.innerHTML =
+                        '<div class="empty-state">' +
+                        '<h2>没有待处理文件</h2>' +
+                        '<p>所有媒体文件都已设置拍摄日期</p>' +
+                        '</div>';
                     hideBatchBar();
+                    if (callback) callback();
                     return;
                 }
 
-                document.getElementById('count-pending').textContent = data.total;
+                var countPending = document.getElementById('count-pending');
+                if (countPending) {
+                    countPending.textContent = data.total;
+                }
                 renderGrid(currentItems, true);  // true = 显示复选框
-
-            } catch (e) {
-                content.innerHTML = `<div class="empty-state"><h2>加载失败</h2><p>${e.message}</p></div>`;
+                if (callback) callback();
+            }, function(status) {
+                var errorMsg = '加载失败: ' + status;
+                content.innerHTML = '<div class="empty-state"><h2>加载失败</h2><p>' + errorMsg + '</p></div>';
                 hideBatchBar();
-            }
+                if (errorCallback) errorCallback(errorMsg);
+            });
         }
 
         // 渲染网格
-        function renderGrid(itemsOrGrouped, withCheckboxes = false) {
-            const content = document.getElementById('content');
+        function renderGrid(itemsOrGrouped, withCheckboxes) {
+            if (withCheckboxes === undefined) {
+                withCheckboxes = false;
+            }
+            var content = document.getElementById('content');
 
             if (withCheckboxes) {
                 // 平铺的待处理文件列表
                 showCheckboxes = true;
-                content.innerHTML = '<div class="timeline-grid">' + itemsOrGrouped.map(item => renderPendingItem(item)).join('') + '</div>';
+                var html = '<div class="timeline-grid">';
+                for (var i = 0; i < itemsOrGrouped.length; i++) {
+                    html += renderPendingItem(itemsOrGrouped[i]);
+                }
+                html += '</div>';
+                content.innerHTML = html;
             } else {
                 // 按日期分组的时间线
-                const grouped = itemsOrGrouped;
-                let html = '';
+                var grouped = itemsOrGrouped;
+                var html = '';
 
                 // 添加排序控制栏
-                html += `
-                    <div class="timeline-section">
-                        <div class="timeline-header">
-                            <span>时间线</span>
-                            <button class="sort-control" onclick="toggleSort()" title="切换排序方式">
-                                ${currentSortOrder === 'asc' ? '正序 ↑ (早→晚)' : '倒序 ↓ (晚→早)'}
-                            </button>
-                        </div>
-                    </div>
-                `;
+                html += '<div class="timeline-section">' +
+                    '<div class="timeline-header">' +
+                    '<span>时间线</span>' +
+                    '<button class="sort-control" onclick="toggleSort()" title="切换排序方式">';
+                if (currentSortOrder === 'asc') {
+                    html += '正序 ↑ (早→晚)';
+                } else {
+                    html += '倒序 ↓ (晚→早)';
+                }
+                html += '</button></div></div>';
 
-                for (const [date, items] of Object.entries(grouped)) {
-                    html += `
-                        <div class="timeline-section">
-                            <div class="timeline-header">
-                                <span>${date}</span>
-                                <span style="font-size: 14px; font-weight: normal;">${items.length} 项</span>
-                            </div>
-                            <div class="timeline-grid">
-                                ${items.map(item => renderItem(item)).join('')}
-                            </div>
-                        </div>
-                    `;
+                // 遍历分组
+                var dates = Object.keys(grouped);
+                for (var d = 0; d < dates.length; d++) {
+                    var date = dates[d];
+                    var items = grouped[date];
+                    html += '<div class="timeline-section">' +
+                        '<div class="timeline-header">' +
+                        '<span>' + date + '</span>' +
+                        '<span style="font-size: 14px; font-weight: normal;">' + items.length + ' 项</span>' +
+                        '</div>' +
+                        '<div class="timeline-grid">';
+                    for (var i = 0; i < items.length; i++) {
+                        html += renderItem(items[i]);
+                    }
+                    html += '</div></div>';
                 }
                 content.innerHTML = html;
             }
@@ -984,10 +1146,11 @@
 
         // 按日期分组
         function groupByDate(items) {
-            const grouped = {};
-            for (const item of items) {
-                const date = new Date(item.create_time * 1000);
-                const dateKey = formatDateKey(date);
+            var grouped = {};
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var date = new Date(item.create_time * 1000);
+                var dateKey = formatDateKey(date);
                 if (!grouped[dateKey]) {
                     grouped[dateKey] = [];
                 }
@@ -998,90 +1161,101 @@
 
         // 格式化日期
         function formatDateKey(date) {
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const itemDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            var now = new Date();
+            var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            var itemDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-            const diffDays = Math.floor((today - itemDate) / (1000 * 60 * 60 * 24));
+            var diffDays = Math.floor((today - itemDate) / (1000 * 60 * 60 * 24));
 
             if (diffDays === 0) return '今天';
             if (diffDays === 1) return '昨天';
-            if (diffDays < 7) return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
+            if (diffDays < 7) {
+                var weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+                return weekdays[date.getDay()];
+            }
 
-            return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+            return date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日';
         }
 
         // 渲染时间线项目
         function renderItem(item) {
-            const thumbnailUrl = item.thumbnail_url || '';
-            const isVideo = item.file_type === 'video';
-            const itemIndex = currentItems.indexOf(item);
+            var thumbnailUrl = item.thumbnail_url || '';
+            var isVideo = item.file_type === 'video';
+            var itemIndex = currentItems.indexOf(item);
 
-            return `
-                <div class="media-item" data-id="${item.id}" tabindex="0">
-                    <div class="thumbnail-container" onclick="openMedia(${itemIndex})">
-                        ${thumbnailUrl ?
-                            `<img src="${thumbnailUrl}" alt="${item.file_name}" loading="lazy">` :
-                            `<div class="placeholder">${isVideo ? '🎬' : '📷'}</div>`
-                        }
-                        ${isVideo ? '<div class="video-badge">▶</div>' : ''}
-                    </div>
-                    <div class="media-info">
-                        <div class="media-filename" onclick="openMedia(${itemIndex})">${item.file_name}</div>
-                        <div class="media-date quick-edit-date" id="date-display-${item.id}" onclick="event.stopPropagation(); showDateInput(${item.id}, this)">
-                            ${formatDate(item.create_time)}
-                            <span class="edit-icon">✏️</span>
-                        </div>
-                        <div class="date-input-container" id="date-input-${item.id}" onclick="event.stopPropagation()">
-                            <input type="datetime-local" class="date-input" id="input-${item.id}">
-                            <div class="date-input-buttons">
-                                <button class="btn primary" onclick="event.stopPropagation(); saveDate(${item.id})">保存</button>
-                                <button class="btn" onclick="event.stopPropagation(); hideDateInput(${item.id})">取消</button>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="edit-btn" onclick="event.stopPropagation(); showDateInputById(${item.id})" title="编辑日期">✏️</button>
-                </div>
-            `;
+            var html = '<div class="media-item" data-id="' + item.id + '" tabindex="0">' +
+                '<div class="thumbnail-container" onclick="openMedia(' + itemIndex + ')">';
+
+            if (thumbnailUrl) {
+                html += '<img src="' + thumbnailUrl + '" alt="' + item.file_name + '" loading="lazy">';
+            } else {
+                html += '<div class="placeholder">' + (isVideo ? 'VIDEO' : 'PHOTO') + '</div>';
+            }
+
+            if (isVideo) {
+                html += '<div class="video-badge">PLAY</div>';
+            }
+
+            html += '</div>' +
+                '<div class="media-info">' +
+                '<div class="media-filename" onclick="openMedia(' + itemIndex + ')">' + item.file_name + '</div>' +
+                '<div class="media-date quick-edit-date" id="date-display-' + item.id + '" onclick="event.stopPropagation(); showDateInput(' + item.id + ', this)">' +
+                formatDate(item.create_time) +
+                '<span class="edit-icon">EDIT</span>' +
+                '</div>' +
+                '<div class="date-input-container" id="date-input-' + item.id + '" onclick="event.stopPropagation()">' +
+                '<input type="datetime-local" class="date-input" id="input-' + item.id + '">' +
+                '<div class="date-input-buttons">' +
+                '<button class="btn primary" onclick="event.stopPropagation(); saveDate(' + item.id + ')">保存</button>' +
+                '<button class="btn" onclick="event.stopPropagation(); hideDateInput(' + item.id + ')">取消</button>' +
+                '</div></div></div>' +
+                '<button class="edit-btn" onclick="event.stopPropagation(); showDateInputById(' + item.id + ')" title="编辑日期">EDIT</button>' +
+                '</div>';
+
+            return html;
         }
 
         // 渲染待处理项目（带复选框）
         function renderPendingItem(item) {
-            const thumbnailUrl = item.thumbnail_url || '';
-            const isVideo = item.file_type === 'video';
-            const itemIndex = currentItems.indexOf(item);
+            var thumbnailUrl = item.thumbnail_url || '';
+            var isVideo = item.file_type === 'video';
+            var itemIndex = currentItems.indexOf(item);
 
-            return `
-                <div class="media-item" data-id="${item.id}" tabindex="0">
-                    <div class="checkbox" onclick="event.stopPropagation(); toggleSelect(${item.id}, this)"></div>
-                    <div class="thumbnail-container" onclick="openMedia(${itemIndex})">
-                        ${thumbnailUrl ?
-                            `<img src="${thumbnailUrl}" alt="${item.file_name}" loading="lazy">` :
-                            `<div class="placeholder">${isVideo ? '🎬' : '📷'}</div>`
-                        }
-                        ${isVideo ? '<div class="video-badge">▶</div>' : ''}
-                    </div>
-                    <div class="media-info">
-                        <div class="media-filename" onclick="openMedia(${itemIndex})">${item.file_name}</div>
-                        <div class="media-date pending quick-edit-date" id="date-display-${item.id}" onclick="event.stopPropagation(); showDateInput(${item.id}, this)">
-                            ⚠ 待设置日期 <span class="edit-icon">✏️</span>
-                        </div>
-                        <div class="date-input-container" id="date-input-${item.id}" onclick="event.stopPropagation()">
-                            <input type="datetime-local" class="date-input" id="input-${item.id}">
-                            <div class="date-input-buttons">
-                                <button class="btn primary" onclick="event.stopPropagation(); saveDate(${item.id})">保存</button>
-                                <button class="btn" onclick="event.stopPropagation(); hideDateInput(${item.id})">取消</button>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="edit-btn" onclick="event.stopPropagation(); showDateInputById(${item.id})" title="编辑日期">✏️</button>
-                </div>
-            `;
+            var html = '<div class="media-item" data-id="' + item.id + '" tabindex="0">' +
+                '<div class="checkbox" onclick="event.stopPropagation(); toggleSelect(' + item.id + ', this)"></div>' +
+                '<div class="thumbnail-container" onclick="openMedia(' + itemIndex + ')">';
+
+            if (thumbnailUrl) {
+                html += '<img src="' + thumbnailUrl + '" alt="' + item.file_name + '" loading="lazy">';
+            } else {
+                html += '<div class="placeholder">' + (isVideo ? 'VIDEO' : 'PHOTO') + '</div>';
+            }
+
+            if (isVideo) {
+                html += '<div class="video-badge">PLAY</div>';
+            }
+
+            html += '</div>' +
+                '<div class="media-info">' +
+                '<div class="media-filename" onclick="openMedia(' + itemIndex + ')">' + item.file_name + '</div>' +
+                '<div class="media-date pending quick-edit-date" id="date-display-' + item.id + '" onclick="event.stopPropagation(); showDateInput(' + item.id + ', this)">' +
+                '待设置日期 <span class="edit-icon">EDIT</span>' +
+                '</div>' +
+                '<div class="date-input-container" id="date-input-' + item.id + '" onclick="event.stopPropagation()">' +
+                '<input type="datetime-local" class="date-input" id="input-' + item.id + '">' +
+                '<div class="date-input-buttons">' +
+                '<button class="btn primary" onclick="event.stopPropagation(); saveDate(' + item.id + ')">保存</button>' +
+                '<button class="btn" onclick="event.stopPropagation(); hideDateInput(' + item.id + ')">取消</button>' +
+                '</div></div></div>' +
+                '<button class="edit-btn" onclick="event.stopPropagation(); showDateInputById(' + item.id + ')" title="编辑日期">EDIT</button>' +
+                '</div>';
+
+            return html;
         }
 
         // 通过ID显示日期输入框（用于编辑按钮）
         function showDateInputById(itemId) {
-            const dateDisplay = document.getElementById(`date-display-${itemId}`);
+            var dateDisplay = document.getElementById('date-display-' + itemId);
             if (dateDisplay) {
                 showDateInput(itemId, dateDisplay);
             }
@@ -1090,51 +1264,63 @@
         // 格式化日期显示
         function formatDate(timestamp) {
             if (!timestamp) return '⚠ 待设置日期';
-            const date = new Date(timestamp * 1000);
+            var date = new Date(timestamp * 1000);
             return date.toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
         // 显示日期输入框
         function showDateInput(itemId, element) {
-            const container = document.getElementById(`date-input-${itemId}`);
-            const input = document.getElementById(`input-${itemId}`);
+            var container = document.getElementById('date-input-' + itemId);
+            var input = document.getElementById('input-' + itemId);
 
             // 获取当前项目的日期
-            const item = currentItems.find(i => i.id === itemId);
+            var item = null;
+            for (var i = 0; i < currentItems.length; i++) {
+                if (currentItems[i].id === itemId) {
+                    item = currentItems[i];
+                    break;
+                }
+            }
+
             if (item && item.create_time) {
-                const date = new Date(item.create_time * 1000);
+                var date = new Date(item.create_time * 1000);
                 // 设置为本地时间格式 (datetime-local 需要 YYYY-MM-DDTHH:mm 格式)
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                const hours = String(date.getHours()).padStart(2, '0');
-                const minutes = String(date.getMinutes()).padStart(2, '0');
-                input.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+                var year = date.getFullYear();
+                var month = padZero(date.getMonth() + 1);
+                var day = padZero(date.getDate());
+                var hours = padZero(date.getHours());
+                var minutes = padZero(date.getMinutes());
+                input.value = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
             } else {
                 // 默认当前时间
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                input.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+                var now = new Date();
+                var year = now.getFullYear();
+                var month = padZero(now.getMonth() + 1);
+                var day = padZero(now.getDate());
+                var hours = padZero(now.getHours());
+                var minutes = padZero(now.getMinutes());
+                input.value = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
             }
 
             container.classList.add('visible');
             input.focus();
         }
 
+        // 补零辅助函数
+        function padZero(num) {
+            return num < 10 ? '0' + num : '' + num;
+        }
+
         // 隐藏日期输入框
         function hideDateInput(itemId) {
-            const container = document.getElementById(`date-input-${itemId}`);
+            var container = document.getElementById('date-input-' + itemId);
             container.classList.remove('visible');
         }
 
         // 保存日期
-        async function saveDate(itemId) {
-            const input = document.getElementById(`input-${itemId}`);
-            const value = input.value;
+        function saveDate(itemId) {
+            var input = document.getElementById('input-' + itemId);
+            var value = input.value;
 
             if (!value) {
                 alert('请选择日期和时间');
@@ -1142,107 +1328,113 @@
             }
 
             // 转换为 Unix 时间戳
-            const date = new Date(value);
-            const timestamp = Math.floor(date.getTime() / 1000);
+            var date = new Date(value);
+            var timestamp = Math.floor(date.getTime() / 1000);
 
-            const dateStr = new Date(timestamp * 1000).toLocaleString('zh-CN');
+            var dateStr = new Date(timestamp * 1000).toLocaleString('zh-CN');
             console.log('保存日期:', itemId, timestamp, dateStr);
 
             // 显示保存中状态
-            const saveBtn = input.parentElement.querySelector('.btn.primary');
-            const originalText = saveBtn.textContent;
+            var saveBtn = input.parentElement.querySelector('.btn.primary');
+            var originalText = saveBtn.textContent;
             saveBtn.textContent = '保存中...';
             saveBtn.disabled = true;
 
-            try {
-                const res = await fetch(`${API_BASE}/media/${itemId}/date`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ create_time: timestamp })
-                });
-
-                if (res.ok) {
-                    hideDateInput(itemId);
-                    // 刷新内容
-                    await loadContent();
+            xhrRequest(API_BASE + '/media/' + itemId + '/date', 'PUT', { create_time: timestamp }, function(response) {
+                hideDateInput(itemId);
+                // 刷新内容
+                loadContent(function() {
                     // 更新统计
-                    await refreshStats();
-
-                    // 显示成功提示
-                    showToast(`✓ 日期已更新为 ${dateStr}`);
-                } else {
-                    const errorText = await res.text();
-                    console.error('保存失败:', res.status, errorText);
-                    alert('保存失败: ' + errorText);
-                    saveBtn.textContent = originalText;
-                    saveBtn.disabled = false;
-                }
-            } catch (e) {
-                console.error('保存异常:', e);
-                alert('保存失败: ' + e.message);
+                    refreshStats(function() {
+                        // 显示成功提示
+                        showToast('✓ 日期已更新为 ' + dateStr);
+                    });
+                });
+            }, function(status) {
+                var errorMsg = '保存失败: ' + status;
+                console.error(errorMsg);
+                alert(errorMsg);
                 saveBtn.textContent = originalText;
                 saveBtn.disabled = false;
-            }
+            });
         }
 
         // 显示提示消息
         function showToast(message) {
             // 移除旧的 toast
-            const oldToast = document.querySelector('.toast');
+            var oldToast = document.querySelector('.toast');
             if (oldToast) oldToast.remove();
 
             // 创建新的 toast
-            const toast = document.createElement('div');
+            var toast = document.createElement('div');
             toast.className = 'toast';
             toast.textContent = message;
             document.body.appendChild(toast);
 
             // 3秒后移除
-            setTimeout(() => {
+            setTimeout(function() {
                 toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 300);
+                setTimeout(function() { toast.remove(); }, 300);
             }, 3000);
         }
 
         // 选择/取消选择
         function toggleSelect(id, checkbox) {
-            if (selectedItems.has(id)) {
-                selectedItems.delete(id);
+            var index = selectedItems.indexOf(id);
+            if (index !== -1) {
+                selectedItems.splice(index, 1);
                 checkbox.classList.remove('checked');
             } else {
-                selectedItems.add(id);
+                selectedItems.push(id);
                 checkbox.classList.add('checked');
             }
             updateSelectedCount();
         }
 
         function updateSelectedCount() {
-            document.getElementById('selectedCount').textContent = selectedItems.size;
+            document.getElementById('selectedCount').textContent = selectedItems.length;
         }
 
         // 全选/取消全选
         function toggleAll() {
-            const checkboxes = document.querySelectorAll('.checkbox');
-            const allChecked = Array.from(checkboxes).every(cb => cb.classList.contains('checked'));
+            var checkboxes = document.querySelectorAll('.checkbox');
+            var allChecked = true;
 
-            checkboxes.forEach(cb => {
+            // 检查是否所有都已选中
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (!checkboxes[i].classList.contains('checked')) {
+                    allChecked = false;
+                    break;
+                }
+            }
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                var cb = checkboxes[i];
                 if (allChecked) {
                     cb.classList.remove('checked');
-                    const id = parseInt(cb.parentElement.parentElement.dataset.id);
-                    selectedItems.delete(id);
+                    var id = parseInt(cb.parentElement.parentElement.dataset.id);
+                    var index = selectedItems.indexOf(id);
+                    if (index !== -1) {
+                        selectedItems.splice(index, 1);
+                    }
                 } else {
                     cb.classList.add('checked');
-                    const id = parseInt(cb.parentElement.parentElement.dataset.id);
-                    selectedItems.add(id);
+                    var id = parseInt(cb.parentElement.parentElement.dataset.id);
+                    if (selectedItems.indexOf(id) === -1) {
+                        selectedItems.push(id);
+                    }
                 }
-            });
+            }
             updateSelectedCount();
         }
 
         // 清空选择
         function clearSelection() {
-            selectedItems.clear();
-            document.querySelectorAll('.checkbox.checked').forEach(cb => cb.classList.remove('checked'));
+            selectedItems = [];
+            var checked = document.querySelectorAll('.checkbox.checked');
+            for (var i = 0; i < checked.length; i++) {
+                checked[i].classList.remove('checked');
+            }
             updateSelectedCount();
         }
 
@@ -1258,45 +1450,35 @@
         }
 
         // 批量设置日期
-        async function batchSetDate() {
-            if (selectedItems.size === 0) {
+        function batchSetDate() {
+            if (selectedItems.length === 0) {
                 alert('请先选择要设置日期的文件');
                 return;
             }
 
-            const newDate = prompt('请输入拍摄时间 (格式: YYYY-MM-DD HH:MM)', '');
+            var newDate = prompt('请输入拍摄时间 (格式: YYYY-MM-DD HH:MM)', '');
             if (!newDate) return;
 
-            const parsedDate = new Date(newDate);
+            var parsedDate = new Date(newDate);
             if (isNaN(parsedDate.getTime())) {
                 alert('日期格式错误，请使用格式: YYYY-MM-DD HH:MM');
                 return;
             }
 
-            const timestamp = parsedDate.getTime() / 1000;
+            var timestamp = parsedDate.getTime() / 1000;
 
-            try {
-                const res = await fetch(`${API_BASE}/media/batch-date`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        item_ids: Array.from(selectedItems),
-                        create_time: timestamp
-                    })
-                });
-
-                if (res.ok) {
-                    const result = await res.json();
-                    alert(`成功更新 ${result.updated_count} 个文件为 ${result.create_date}`);
-                    clearSelection();
-                    loadContent();  // 重新加载列表
+            xhrRequest(API_BASE + '/media/batch-date', 'PUT', {
+                item_ids: selectedItems,
+                create_time: timestamp
+            }, function(result) {
+                alert('成功更新 ' + result.updated_count + ' 个文件为 ' + result.create_date);
+                clearSelection();
+                loadContent(function() {
                     refreshStats();
-                } else {
-                    alert('更新失败: ' + res.statusText);
-                }
-            } catch (e) {
-                alert('更新失败: ' + e.message);
-            }
+                });
+            }, function(status) {
+                alert('更新失败: ' + status);
+            });
         }
 
         // 打开媒体查看器
@@ -1308,9 +1490,9 @@
             }
 
             currentIndex = index;
-            const item = currentItems[index];
-            const modal = document.getElementById('modal');
-            const content = document.getElementById('modalContent');
+            var item = currentItems[index];
+            var modal = document.getElementById('modal');
+            var content = document.getElementById('modalContent');
 
             // 初始化背景音乐元素
             if (!bgMusicElement) {
@@ -1323,8 +1505,11 @@
             // 更新进度显示
             updatePlaybackProgress();
 
+            // 检查是否需要加载更多数据
+            checkAndLoadMore();
+
             if (item.file_type === 'video') {
-                content.innerHTML = `<video src="${item.file_url}" controls id="currentVideo"></video>`;
+                content.innerHTML = '<video src="' + item.file_url + '" controls id="currentVideo"></video>';
                 videoElement = content.querySelector('video');
 
                 // 视频时停止背景音乐
@@ -1334,7 +1519,7 @@
                 }
 
                 // 视频播放结束后自动跳到下一个
-                videoElement.addEventListener('ended', () => {
+                videoElement.addEventListener('ended', function() {
                     if (isPlaying) {
                         navigate(1);
                     }
@@ -1342,41 +1527,76 @@
 
                 // 如果正在播放，自动开始播放视频
                 if (isPlaying) {
-                    videoElement.play().catch(e => console.log('自动播放失败:', e));
+                    try {
+                        videoElement.play();
+                    } catch(e) {
+                        console.log('自动播放失败:', e);
+                    }
                 }
             } else {
-                content.innerHTML = `<img src="${item.file_url}" alt="${item.file_name}">`;
+                // 照片模式 - 直接替换
+                content.innerHTML = '<img src="' + item.file_url + '" alt="' + item.file_name + '" id="currentImage">';
                 videoElement = null;
+
+                // 获取图片元素
+                var img = content.querySelector('img');
+
+                // 图片加载完成后自动跳转下一张
+                var onImageLoad = function() {
+                    if (playTimer) {
+                        clearTimeout(playTimer);
+                        playTimer = null;
+                    }
+
+                    var delay = playbackSpeeds[currentSpeedIndex];
+
+                    playTimer = setTimeout(function() {
+                        if (isPlaying && currentIndex < currentItems.length - 1) {
+                            navigate(1);
+                        } else if (isPlaying) {
+                            stopPlayback();
+                            showToast('播放完毕');
+                        }
+                    }, delay);
+                };
+
+                // 监听图片加载事件
+                if (img.complete) {
+                    onImageLoad();
+                } else {
+                    img.onload = onImageLoad;
+                    img.onerror = function() {
+                        onImageLoad();
+                    };
+                }
 
                 // 照片时播放背景音乐
                 if (bgMusicElement && isPlaying) {
-                    bgMusicElement.play().catch(e => console.log('背景音乐播放失败:', e));
-                }
-
-                // 如果正在播放，设置定时器自动跳到下一张
-                if (isPlaying) {
-                    scheduleNext();
+                    try {
+                        bgMusicElement.play();
+                    } catch(e) {
+                        console.log('背景音乐播放失败:', e);
+                    }
                 }
             }
 
             // 显示日期信息（播放时隐藏）
-            const dateBar = document.getElementById('modalDateBar');
-            const dateText = document.getElementById('modalDateText');
+            var dateBar = document.getElementById('modalDateBar');
+            var dateText = document.getElementById('modalDateText');
 
             if (currentTab === 'pending') {
-                // 待处理文件，显示编辑按钮
-                const date = item.create_time ? new Date(item.create_time * 1000).toLocaleString('zh-CN') : '无';
-                dateText.textContent = `当前: ${date} | 需要设置拍摄日期`;
+                var date = item.create_time ? new Date(item.create_time * 1000).toLocaleString('zh-CN') : '无';
+                dateText.textContent = '当前: ' + date + ' | 需要设置拍摄日期';
             } else {
-                const date = new Date(item.create_time * 1000);
-                dateText.textContent = `拍摄时间: ${date.toLocaleString('zh-CN')}`;
+                var date = new Date(item.create_time * 1000);
+                dateText.textContent = '拍摄时间: ' + date.toLocaleString('zh-CN');
             }
 
             // 播放时隐藏日期栏，暂停时显示
             if (isPlaying) {
                 dateBar.style.display = 'none';
             } else {
-                dateBar.style.display = 'flex';
+                dateBar.style.display = 'block';
             }
 
             modal.classList.add('active');
@@ -1398,14 +1618,27 @@
 
         // 导航（按列表顺序播放）
         function navigate(direction) {
-            const newIndex = currentIndex + direction;
+            var newIndex = currentIndex + direction;
             if (newIndex >= 0 && newIndex < currentItems.length) {
                 openMedia(newIndex);
+            } else if (newIndex >= currentItems.length && hasMore) {
+                // 还有更多数据，等待加载（会在checkAndLoadMore中触发）
+                console.log('[HowTimeFly] 等待加载更多数据...');
+                // 延迟一点再试，给数据加载时间
+                setTimeout(function() {
+                    if (newIndex < currentItems.length) {
+                        openMedia(newIndex);
+                    } else if (isPlaying && !hasMore) {
+                        // 确实没有更多数据了
+                        stopPlayback();
+                        showToast('播放完毕');
+                    }
+                }, 500);
             } else {
-                // 到达边界，停止播放
+                // 到达边界且没有更多数据，停止播放
                 if (isPlaying) {
                     stopPlayback();
-                    showToast('✓ 播放完毕');
+                    showToast('播放完毕');
                 }
             }
         }
@@ -1415,8 +1648,8 @@
         // 切换播放/暂停
         function togglePlay() {
             isPlaying = !isPlaying;
-            const playIcon = document.getElementById('playIcon');
-            const dateBar = document.getElementById('modalDateBar');
+            var playIcon = document.getElementById('playIcon');
+            var dateBar = document.getElementById('modalDateBar');
 
             if (isPlaying) {
                 playIcon.textContent = '⏸';
@@ -1425,18 +1658,24 @@
 
                 // 如果当前是视频，开始播放
                 if (videoElement) {
-                    videoElement.play().catch(e => {
+                    try {
+                        videoElement.play();
+                    } catch(e) {
                         console.log('播放失败:', e);
                         isPlaying = false;
                         playIcon.textContent = '▶';
                         // 恢复显示日期栏
-                        if (dateBar) dateBar.style.display = 'flex';
-                    });
+                        if (dateBar) dateBar.style.display = 'block';
+                    }
                 } else {
                     // 照片，设置定时器并播放背景音乐
                     scheduleNext();
                     if (bgMusicElement) {
-                        bgMusicElement.play().catch(e => console.log('背景音乐播放失败:', e));
+                        try {
+                            bgMusicElement.play();
+                        } catch(e) {
+                            console.log('背景音乐播放失败:', e);
+                        }
                     }
                 }
             } else {
@@ -1467,7 +1706,12 @@
                 clearTimeout(playTimer);
                 playTimer = null;
             }
-            const playIcon = document.getElementById('playIcon');
+            // 停止背景音乐
+            if (bgMusicElement) {
+                bgMusicElement.pause();
+                bgMusicElement.currentTime = 0;
+            }
+            var playIcon = document.getElementById('playIcon');
             if (playIcon) {
                 playIcon.textContent = '▶';
             }
@@ -1475,14 +1719,19 @@
 
         // 安排下一张（照片）
         function scheduleNext() {
-            if (!isPlaying || videoElement) return; // 视频不使用定时器
+            if (!isPlaying) {
+                return;
+            }
+            if (videoElement) {
+                return;
+            }
 
             if (playTimer) {
                 clearTimeout(playTimer);
             }
 
-            const delay = playbackSpeeds[currentSpeedIndex];
-            playTimer = setTimeout(() => {
+            var delay = playbackSpeeds[currentSpeedIndex];
+            playTimer = setTimeout(function() {
                 // 按列表顺序播放
                 if (isPlaying && currentIndex < currentItems.length - 1) {
                     navigate(1);
@@ -1496,25 +1745,46 @@
 
         // 更新播放进度显示
         function updatePlaybackProgress() {
-            const progress = document.getElementById('playbackProgress');
-            const fill = document.getElementById('playbackProgressFill');
+            var progress = document.getElementById('playbackProgress');
+            var fill = document.getElementById('playbackProgressFill');
             if (progress && fill) {
-                const current = currentIndex + 1;
-                const total = currentItems.length;
-                progress.textContent = `${current} / ${total}`;
-                fill.style.width = `${(current / total) * 100}%`;
+                var current = currentIndex + 1;
+                var total = currentItems.length;
+                progress.textContent = current + ' / ' + total;
+                fill.style.width = ((current / total) * 100) + '%';
             }
         }
 
         // 循环切换速度
         function cycleSpeed() {
             currentSpeedIndex = (currentSpeedIndex + 1) % playbackSpeeds.length;
-            const speeds = playbackSpeeds.map(s => s === 1000 ? '1s' : s === 3000 ? '3s' : s === 5000 ? '5s' : '10s');
+            var speeds = [];
+            for (var i = 0; i < playbackSpeeds.length; i++) {
+                var s = playbackSpeeds[i];
+                if (s === 1000) {
+                    speeds.push('1s');
+                } else if (s === 3000) {
+                    speeds.push('3s');
+                } else if (s === 5000) {
+                    speeds.push('5s');
+                } else {
+                    speeds.push('10s');
+                }
+            }
             document.getElementById('playbackSpeed').textContent = speeds[currentSpeedIndex];
 
             // 如果正在播放照片，重新安排定时器
             if (isPlaying && !videoElement) {
                 scheduleNext();
+            }
+        }
+
+        // 初始化速度显示
+        function initSpeedDisplay() {
+            var speedElement = document.getElementById('playbackSpeed');
+            if (speedElement) {
+                var speeds = ['3s', '5s', '10s'];
+                speedElement.textContent = speeds[currentSpeedIndex];
             }
         }
 
@@ -1531,14 +1801,14 @@
             openMedia(0);
 
             // 延迟一点再开始播放，确保内容加载完成
-            setTimeout(() => {
+            setTimeout(function() {
                 togglePlay();
             }, 500);
         }
 
         // 全屏切换
         function toggleFullscreen() {
-            const modal = document.getElementById('modal');
+            var modal = document.getElementById('modal');
             modal.classList.toggle('fullscreen');
 
             if (modal.classList.contains('fullscreen')) {
@@ -1567,7 +1837,7 @@
             if (currentTab !== 'timeline') {
                 switchTab('timeline');
                 // 等待加载完成后开始播放
-                setTimeout(() => {
+                setTimeout(function() {
                     startFromFirst();
                 }, 500);
             } else {
@@ -1576,51 +1846,41 @@
         }
 
         // 编辑单个日期
-        async function editDate() {
-            const item = currentItems[currentIndex];
-            const date = item.create_time ? new Date(item.create_time * 1000) : new Date();
+        function editDate() {
+            var item = currentItems[currentIndex];
+            var date = item.create_time ? new Date(item.create_time * 1000) : new Date();
 
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const defaultDate = `${year}-${month}-${day} ${hours}:${minutes}`;
+            var year = date.getFullYear();
+            var month = padZero(date.getMonth() + 1);
+            var day = padZero(date.getDate());
+            var hours = padZero(date.getHours());
+            var minutes = padZero(date.getMinutes());
+            var defaultDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
 
-            const newDate = prompt('请输入拍摄时间 (格式: YYYY-MM-DD HH:MM)', defaultDate);
+            var newDate = prompt('请输入拍摄时间 (格式: YYYY-MM-DD HH:MM)', defaultDate);
             if (newDate === null) return;
 
-            const parsedDate = new Date(newDate);
+            var parsedDate = new Date(newDate);
             if (isNaN(parsedDate.getTime())) {
                 alert('日期格式错误，请使用格式: YYYY-MM-DD HH:MM');
                 return;
             }
 
-            const timestamp = parsedDate.getTime() / 1000;
+            var timestamp = parsedDate.getTime() / 1000;
 
-            try {
-                const res = await fetch(`${API_BASE}/media/${item.id}/date`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ create_time: timestamp })
-                });
-
-                if (res.ok) {
-                    const result = await res.json();
-                    alert('日期更新成功!');
-                    closeModal();
-                    loadContent();
+            xhrRequest(API_BASE + '/media/' + item.id + '/date', 'PUT', { create_time: timestamp }, function(result) {
+                alert('日期更新成功!');
+                closeModal();
+                loadContent(function() {
                     refreshStats();
-                } else {
-                    alert('更新失败: ' + res.statusText);
-                }
-            } catch (e) {
-                alert('更新失败: ' + e.message);
-            }
+                });
+            }, function(status) {
+                alert('更新失败: ' + status);
+            });
         }
 
         // 键盘控制
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', function(e) {
             if (!document.getElementById('modal').classList.contains('active')) return;
 
             switch (e.key) {
@@ -1645,7 +1905,7 @@
         });
 
         // 点击背景关闭
-        document.getElementById('modal').addEventListener('click', (e) => {
+        document.getElementById('modal').addEventListener('click', function(e) {
             if (e.target.id === 'modal') {
                 closeModal();
             }
