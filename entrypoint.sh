@@ -67,13 +67,13 @@ if [ -n "$SCAN_PATHS" ]; then
     echo "配置扫描路径: $SCAN_PATHS"
     # 将路径转换为 YAML 列表格式
     IFS=':' read -ra PATHS <<< "$SCAN_PATHS"
-    Python3 /app/update_config.py "$CONFIG_FILE" "scanner.paths" "${PATHS[@]}"
+    python3 /app/app/update_config.py "$CONFIG_FILE" "scanner.paths" "${PATHS[@]}"
 fi
 
 # SCAN_RECURSIVE - 是否递归扫描
 if [ -n "$SCAN_RECURSIVE" ]; then
     echo "配置递归扫描: $SCAN_RECURSIVE"
-    python3 /app/update_config.py "$CONFIG_FILE" "scanner.recursive" "$SCAN_RECURSIVE"
+    python3 /app/app/update_config.py "$CONFIG_FILE" "scanner.recursive" "$SCAN_RECURSIVE"
 fi
 
 # TZ - 时区 (由 Docker 自动处理，这里仅显示)
@@ -84,7 +84,7 @@ fi
 # ============ 显示最终配置 ============
 echo ""
 echo "最终扫描配置:"
-python3 /app/show_config.py "$CONFIG_FILE"
+python3 /app/app/show_config.py "$CONFIG_FILE"
 echo ""
 
 # ============ 启动应用 ============
